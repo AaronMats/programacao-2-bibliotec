@@ -4,6 +4,8 @@ import routes from './routes';
 
 const app = express();
 
+app.set('query parser', 'extended');
+
 // Middleware
 app.use(cors());
 app.use(express.json());

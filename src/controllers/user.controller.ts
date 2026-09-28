@@ -10,11 +10,12 @@ export class UserController {
 
   public getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
-      const { page, limit, q } = req.query as any;
+      const { page, limit, q, orderBy } = req.query as any;
       const users = await this.userService.getAllUsers({
         page: Number(page),
         limit: Number(limit),
         where: q,
+        orderBy,
       });
       res.status(200).json(users);
     } catch (error) {

@@ -30,20 +30,21 @@ export class UserService {
         })),
     }
     : {};
-    const orderBy = params.orderBy ? Object.entries(params.orderBy).map(([key, value]) => ({
-        [key]: {
-            [value]: value === 'asc' ? 'asc' : 'desc',
-        },
-    })) : {
-        createdAt: 'desc' as const,
-    };
+    const orderBy = params.orderBy
+      ? Object.entries(params.orderBy).map(([key, value]) => ({
+          [key]: value === 'asc' ? 'asc' as const : 'desc' as const,
+        }))
+      : { createdAt: 'desc' as const };
     const users = await prisma.user.findMany({
         skip,
         take: limit || 10,
         where,
         orderBy,
     });
-    return users;
+
+    const usersWithoutPasswords = users.map(({ password, ...user }) => user);
+
+    return usersWithoutPasswords;
   }
 
   public async getUserById(id: string): Promise<User | null> {
