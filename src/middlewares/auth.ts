@@ -30,7 +30,6 @@ export async function authenticate(
             throw new AppError("Token de autenticação não informado", 401);
         }
         
-        
         const token = authHeader.slice('Bearer '.length).trim();
         const payload = verifyToken(token);
 
