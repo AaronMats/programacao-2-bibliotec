@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { Livro, Prisma } from "@prisma/client";
+import { Livros, Prisma } from "@prisma/client";
 import { z } from "zod";
 
 const livroSchema = z.object({
@@ -9,12 +9,12 @@ const livroSchema = z.object({
     autor: z.string()
         .min(1, 'O autor deve ter pelo menos 1 caractere')
         .max(200, 'O autor deve ter no máximo 200 caracteres'),
-    quantit:y: z.number()
+    quantidade: z.number()
         .int('A quantidade deve ser um número inteiro')
         .min(0, 'A quantidade não pode ser negativa'),
 });
 
-export type LivroInput = z.infer<typeof livroSchema> & Prisma.LivroCreateInput;
+export type LivroInput = z.infer<typeof livroSchema> & Prisma.LivrosCreateInput;
 
 export class LivroService {
     async getAllLivros(params: {
@@ -22,24 +22,24 @@ export class LivroService {
         limit?: number;
         where?: any;
         orderBy?: any;
-    }): Promise<Livro[]> { 
+    }): Promise<Livros[]> { 
         const { skip = 0, limit = 10, where, orderBy } = params;
-        const livros = await prisma.livro.findMany({
+        const livros = await prisma.livros.findMany({
             skip,
             take: limit,
         });
         return livros;
     }
 
-    async getLivroById(id: string): Promise<Livro | null> {
-        const livro = await prisma.livro.findUnique({
+    async getLivroById(id: string): Promise<Livros | null> {
+        const livro = await prisma.livros.findUnique({
             where: { id },
         });
         return livro;
     }
 
-    async createLivro(data: LivroInput): Promise<Livro> {
-        const newlivro = data.quantidade > 0 ? await prisma.livro.create({
+    async createLivro(data: LivroInput): Promise<Livros> {
+        const newlivro = data.quantidade > 0 ? await prisma.livros.create({
             data: {
                 titulo: data.titulo,
                 autor: data.autor,
@@ -49,16 +49,16 @@ export class LivroService {
         return newlivro;
     }
 
-    async updateLivro(id: string, data: Prisma.LivroUpdateInput): Promise<Livro | null> {
-        const updatedLivro = await prisma.livro.update({
+    async updateLivro(id: string, data: Prisma.LivrosUpdateInput): Promise<Livros | null> {
+        const updatedLivro = await prisma.livros.update({
             where: { id },
             data,
         });
         return updatedLivro;
     }
 
-    async deleteLivro(id: string): Promise<Livro | null> {
-        const deletedLivro = await prisma.livro.delete({
+    async deleteLivro(id: string): Promise<Livros | null> {
+        const deletedLivro = await prisma.livros.delete({
             where: { id },
         });
         return deletedLivro;
